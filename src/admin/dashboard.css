@@ -1,0 +1,330 @@
+/* ── Admin Layout ── */
+.admin-layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* ── Sidebar ── */
+.admin-sidebar {
+  width: 240px;
+  background: #111;
+  padding: 25px;
+  border-right: 1px solid #222;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+}
+
+.admin-sidebar .sidebar-logo {
+  color: #D4A017;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 22px;
+  letter-spacing: 2px;
+  margin-bottom: 8px;
+}
+
+.admin-sidebar .sidebar-sub {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #444;
+  margin-bottom: 36px;
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  margin-bottom: 6px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 13px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: #666;
+  transition: all 0.2s;
+  border: 1px solid transparent;
+}
+
+.menu-item:hover {
+  background: #1a1a1a;
+  color: #ccc;
+}
+
+.menu-item.active {
+  background: rgba(212, 160, 23, 0.08);
+  border-color: rgba(212, 160, 23, 0.2);
+  color: #D4A017;
+}
+
+.sidebar-divider {
+  height: 1px;
+  background: #1e1e1e;
+  margin: 16px 0;
+}
+
+.sidebar-back-btn {
+  margin-top: auto;
+  padding: 10px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 12px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: #444;
+  transition: all 0.2s;
+  text-decoration: none;
+  display: block;
+  border: 1px solid #1e1e1e;
+  text-align: center;
+}
+
+.sidebar-back-btn:hover {
+  color: #888;
+  border-color: #333;
+}
+
+/* ── Main content ── */
+.admin-main {
+  flex: 1;
+  padding: 32px;
+  overflow-x: hidden;
+}
+
+/* ── Topbar ── */
+.admin-topbar {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 32px;
+}
+
+.admin-topbar h1 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 36px;
+  letter-spacing: 2px;
+  color: #fff;
+}
+
+.admin-topbar .topbar-sub {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #444;
+  margin-top: 2px;
+}
+
+.admin-topbar .topbar-date {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 12px;
+  letter-spacing: 1px;
+  color: #444;
+  text-align: right;
+  margin-top: 4px;
+}
+
+/* ── Stat Cards ── */
+.admin-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+  margin-bottom: 32px;
+}
+
+.admin-card {
+  background: #181818;
+  border: 1px solid #222;
+  border-radius: 8px;
+  padding: 24px;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.2s;
+}
+
+.admin-card:hover {
+  border-color: #333;
+}
+
+.admin-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #9A7210, #D4A017);
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.admin-card:hover::after {
+  opacity: 1;
+}
+
+.card-label {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #555;
+  margin-bottom: 12px;
+}
+
+.card-value {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 48px;
+  letter-spacing: 2px;
+  color: #D4A017;
+  line-height: 1;
+}
+
+.card-delta {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 11px;
+  letter-spacing: 1px;
+  color: #38A169;
+  margin-top: 8px;
+}
+
+/* ── Table ── */
+.admin-table-wrap {
+  background: #181818;
+  border: 1px solid #222;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.admin-table-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px;
+  border-bottom: 1px solid #222;
+}
+
+.admin-table-header h2 {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 14px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #888;
+  font-weight: 700;
+}
+
+.admin-table-header .table-count {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 11px;
+  letter-spacing: 1px;
+  color: #444;
+}
+
+.admin-table-scroll {
+  overflow-x: auto;
+}
+
+table.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+table.admin-table th {
+  padding: 12px 20px;
+  text-align: left;
+  background: #141414;
+  color: #D4A017;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  font-weight: 700;
+  border-bottom: 1px solid #222;
+}
+
+table.admin-table td {
+  padding: 14px 20px;
+  border-bottom: 1px solid #1a1a1a;
+  font-size: 14px;
+  color: #ccc;
+}
+
+table.admin-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+table.admin-table tbody tr:hover td {
+  background: #1e1e1e;
+}
+
+table.admin-table .td-name {
+  color: #e8e8e8;
+  font-weight: 500;
+}
+
+table.admin-table .td-phone {
+  color: #888;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 13px;
+  letter-spacing: 0.5px;
+}
+
+table.admin-table .td-date {
+  color: #555;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 13px;
+  letter-spacing: 0.5px;
+}
+
+.id-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  background: rgba(212, 160, 23, 0.08);
+  border: 1px solid rgba(212, 160, 23, 0.15);
+  border-radius: 3px;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 11px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: #9A7210;
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .admin-layout {
+    flex-direction: column;
+  }
+
+  .admin-sidebar {
+    width: 100%;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    padding: 16px;
+  }
+
+  .admin-sidebar .sidebar-logo {
+    margin-bottom: 0;
+    margin-right: auto;
+  }
+
+  .admin-sidebar .sidebar-sub {
+    display: none;
+  }
+
+  .sidebar-back-btn {
+    margin-top: 0;
+  }
+
+  .sidebar-divider {
+    display: none;
+  }
+
+  .admin-main {
+    padding: 20px 16px;
+  }
+}
