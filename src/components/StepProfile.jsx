@@ -22,6 +22,14 @@ export default function StepProfile({ form, errors, set }) {
             onChange={e => set('fullName', e.target.value)}
           />
         </Field>
+        <Field label="Username" error={errors.username} full>
+          <input
+            className={errors.username ? 'error' : ''}
+            placeholder="Enter Username"
+            value={form.username}
+            onChange={e => set('username', e.target.value)}
+          />
+        </Field>
         <Field label="Date of Birth" error={errors.dateOfBirth}>
           <input
             type="date"

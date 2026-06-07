@@ -7,6 +7,7 @@ import StepRules from './components/StepRules';
 import StepMedia from './components/StepMedia';
 import StepSignature from './components/StepSignature';
 import SuccessScreen from './components/SuccessScreen';
+import logo from './assets/logo.jpeg'
 
 const API_BASE = 'http://localhost:5000/api/auth';
 
@@ -15,6 +16,7 @@ const STEPS = ['Profile', 'Tax & Prize', 'Rules', 'Media & Liability', 'Signatur
 const INITIAL_FORM = {
   hubLocation: '',
   fullName: '',
+  username: '',
   dateOfBirth: '',
   idType: 'NIN',
   idNumber: '',
@@ -47,6 +49,7 @@ export default function App() {
     if (step === 0) {
       if (!form.hubLocation.trim()) errs.hubLocation = 'Hub location is required';
       if (!form.fullName.trim()) errs.fullName = 'Full name is required';
+      if (!form.username.trim()) errs.username = 'Username is required';
       if (!form.dateOfBirth) {
         errs.dateOfBirth = 'Date of birth is required';
       } else {
@@ -128,16 +131,13 @@ export default function App() {
 
   if (submitResult) {
     return <SuccessScreen submitResult={submitResult} />;
-  }
+  } 
 
   return (
     <div>
       <header className="site-header">
-        <div className="badge">Season of Legends 2026 · Da Axis · eSports Residency</div>
-        <h1>
-          Athlete<span>Enrollment</span>
-        </h1>
-        <p>Tournament Waiver &amp; Registration · 4,096 Participant Program</p>
+        <img src={logo} alt="logo" height={200} className='mb-4' /> 
+        {/* <h1>Athlete<span>Enrollment</span></h1> */}
       </header>
 
       <div className="container">
