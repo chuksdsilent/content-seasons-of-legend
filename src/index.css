@@ -431,7 +431,6 @@ body {
 }
 .profile-result__tid-value {
   display: block;
-  font-family: 'Bebas Neue', sans-serif;
   font-size: 40px;
   letter-spacing: 6px;
   color: var(--gold);

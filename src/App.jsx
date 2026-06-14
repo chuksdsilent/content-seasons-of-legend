@@ -180,11 +180,13 @@ export default function App() {
           submitResult={submitResult}
         />
 
-        <div className="nav-buttons">
-          <button className="btn btn-submit" onClick={handleSubmit} disabled={submitting}>
-            {submitting ? 'Submitting...' : 'Submit'}
-          </button>
-        </div>
+        {!submitResult && (
+          <div className="nav-buttons">
+            <button className="btn btn-submit" onClick={handleSubmit} disabled={submitting}>
+              {submitting ? 'Submitting...' : 'Submit'}
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

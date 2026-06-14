@@ -55,7 +55,7 @@ export default function StepProfile({ form, errors, set, cities, lgas, areas, su
               onChange={e => set('hubLocation', e.target.value)}
             />
           </Field>
-          <Field label="First Name" error={errors.firstName} full>
+          <Field label="First Name" error={errors.firstName}>
             <input
               className={errors.firstName ? 'error' : ''}
               placeholder="First name"
