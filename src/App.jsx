@@ -69,6 +69,7 @@ const INITIAL_FORM = {
   mediaReleaseGranted: false,
   liabilityWaiverAccepted: false,
   athleteSignature: '',
+  termsAccepted: false,
 };
 
 export default function App() {
@@ -114,6 +115,7 @@ export default function App() {
     if (selectedAreaOptions.length && !form.area) errs.area = 'Area is required';
     if (!form.idNumber.trim()) errs.idNumber = 'ID number is required';
     if (!form.phoneNumber.trim()) errs.phoneNumber = 'Phone number is required';
+    if (!form.termsAccepted) errs.termsAccepted = 'You must accept the terms and conditions';
 
     setErrors(errs);
     return Object.keys(errs).length === 0;
@@ -159,10 +161,6 @@ export default function App() {
     }
   };
 
-  if (submitResult) {
-    return <SuccessScreen submitResult={submitResult} />;
-  }
-
   return (
     <div>
       <header className="site-header">
@@ -179,6 +177,7 @@ export default function App() {
           cities={Object.keys(CITY_LGA_AREA_MAP)}
           lgas={form.city ? Object.keys(CITY_LGA_AREA_MAP[form.city]) : []}
           areas={form.city && form.lga ? CITY_LGA_AREA_MAP[form.city][form.lga] || [] : []}
+          submitResult={submitResult}
         />
 
         <div className="nav-buttons">
