@@ -2,22 +2,63 @@ import { useState } from 'react';
 import Swal from 'sweetalert2';
 
 import StepProfile from './components/StepProfile';
-import StepTax from './components/StepTax';
-import StepRules from './components/StepRules';
-import StepMedia from './components/StepMedia';
-import StepSignature from './components/StepSignature';
 import SuccessScreen from './components/SuccessScreen';
-import logo from './assets/logo.jpeg'
+import logo from './assets/logo.jpeg';
 
 const API_BASE = 'http://localhost:5000/api/auth';
 
-const STEPS = ['Profile', 'Tax & Prize', 'Rules', 'Media & Liability', 'Signature'];
+const CITY_LGA_AREA_MAP = {
+  Enugu: {
+    'Enugu North Areas': [
+      'GRA',
+      'Independence Layout',
+      'New Haven',
+      'Ogui',
+      'Asata',
+      'Iva Valley',
+    ],
+    'Enugu South Areas': [
+      'Uwani',
+      'Achara Layout',
+      'Garriki',
+      'Akwuke',
+      'Amechi',
+      'Ugwuaji',
+    ],
+    'Enugu East Areas': [
+      'Trans-Ekulu',
+      'Abakpa Nike',
+      'Emene',
+      'Thinkers Corner',
+    ],
+    Agbani: [],
+  },
+  Nsukka: {
+    'Zone 1': [
+      'GRA',
+      'Aku Road/New Anglican Road',
+      'Odenigbo/barracks',
+      'Ugwuechara/ Obaechara',
+    ],
+    'Zone 2': [
+      'UNN/University road',
+      'Onuiyi/beach',
+      'Ibeagwa road',
+      'Hill top/Odenigwe',
+    ],
+    'Zone 3': ['Nru', 'Orba', 'Ugwuoye'],
+  },
+};
 
 const INITIAL_FORM = {
   hubLocation: '',
-  fullName: '',
+  firstName: '',
+  lastName: '',
   username: '',
   dateOfBirth: '',
+  city: '',
+  lga: '',
+  area: '',
   idType: 'NIN',
   idNumber: '',
   phoneNumber: '',
@@ -31,7 +72,6 @@ const INITIAL_FORM = {
 };
 
 export default function App() {
-  const [step, setStep] = useState(0);
   const [submitting, setSubmitting] = useState(false);
   const [submitResult, setSubmitResult] = useState(null);
   const [apiError, setApiError] = useState('');
@@ -39,56 +79,48 @@ export default function App() {
   const [form, setForm] = useState(INITIAL_FORM);
 
   const set = (key, val) => {
-    setForm(f => ({ ...f, [key]: val }));
-    setErrors(e => ({ ...e, [key]: '' }));
+    setForm(f => ({
+      ...f,
+      [key]: val,
+      ...(key === 'city' ? { lga: '', area: '' } : {}),
+      ...(key === 'lga' ? { area: '' } : {}),
+    }));
+    setErrors(e => ({
+      ...e,
+      [key]: '',
+      ...(key === 'city' ? { lga: '', area: '' } : {}),
+      ...(key === 'lga' ? { area: '' } : {}),
+    }));
   };
 
-  const validateStep = () => {
+  const validateProfile = () => {
     const errs = {};
+    const selectedAreaOptions =
+      form.city && form.lga ? CITY_LGA_AREA_MAP[form.city][form.lga] || [] : [];
 
-    if (step === 0) {
-      if (!form.hubLocation.trim()) errs.hubLocation = 'Hub location is required';
-      if (!form.fullName.trim()) errs.fullName = 'Full name is required';
-      if (!form.username.trim()) errs.username = 'Username is required';
-      if (!form.dateOfBirth) {
-        errs.dateOfBirth = 'Date of birth is required';
-      } else {
-        const dob = new Date(form.dateOfBirth);
-        const age = new Date().getFullYear() - dob.getFullYear();
-        if (age < 18) errs.dateOfBirth = 'Athlete must be 18 or older';
-      }
-      if (!form.idNumber.trim()) errs.idNumber = 'ID number is required';
-      if (!form.phoneNumber.trim()) errs.phoneNumber = 'Phone number is required';
+    if (!form.hubLocation.trim()) errs.hubLocation = 'Hub location is required';
+    if (!form.firstName.trim()) errs.firstName = 'First name is required';
+    if (!form.lastName.trim()) errs.lastName = 'Last name is required';
+    if (!form.username.trim()) errs.username = 'Username is required';
+    if (!form.dateOfBirth) {
+      errs.dateOfBirth = 'Date of birth is required';
+    } else {
+      const dob = new Date(form.dateOfBirth);
+      const age = new Date().getFullYear() - dob.getFullYear();
+      if (age < 18) errs.dateOfBirth = 'Athlete must be 18 or older';
     }
-
-    if (step === 1) {
-      if (!form.taxAcknowledged) errs.taxAcknowledged = 'You must acknowledge the tax terms';
-    }
-
-    if (step === 2) {
-      if (!form.antiWageringAgreed) errs.antiWageringAgreed = 'Required';
-      if (!form.hardwareIntegrityAgreed) errs.hardwareIntegrityAgreed = 'Required';
-      if (!form.conductAgreed) errs.conductAgreed = 'Required';
-    }
-
-    if (step === 3) {
-      if (!form.mediaReleaseGranted) errs.mediaReleaseGranted = 'Required';
-      if (!form.liabilityWaiverAccepted) errs.liabilityWaiverAccepted = 'Required';
-    }
-
-    if (step === 4) {
-      if (!form.athleteSignature.trim()) errs.athleteSignature = 'Signature is required';
-    }
+    if (!form.city) errs.city = 'City is required';
+    if (!form.lga) errs.lga = 'LGA is required';
+    if (selectedAreaOptions.length && !form.area) errs.area = 'Area is required';
+    if (!form.idNumber.trim()) errs.idNumber = 'ID number is required';
+    if (!form.phoneNumber.trim()) errs.phoneNumber = 'Phone number is required';
 
     setErrors(errs);
     return Object.keys(errs).length === 0;
   };
 
-  const next = () => { if (validateStep()) setStep(s => s + 1); };
-  const back = () => setStep(s => s - 1);
-
   const handleSubmit = async () => {
-    if (!validateStep()) return;
+    if (!validateProfile()) return;
     setSubmitting(true);
     setApiError('');
 
@@ -127,64 +159,32 @@ export default function App() {
     }
   };
 
-  const progress = (step / STEPS.length) * 100;
-
   if (submitResult) {
     return <SuccessScreen submitResult={submitResult} />;
-  } 
+  }
 
   return (
     <div>
       <header className="site-header">
-        <img src={logo} alt="logo" height={200} className='mb-4' /> 
-        {/* <h1>Athlete<span>Enrollment</span></h1> */}
+        <img src={logo} alt="logo" height={200} className="mb-4" />
       </header>
 
       <div className="container">
-        {/* Progress */}
-        <div className="progress-wrap">
-          <div className="progress-labels">
-            {STEPS.map((s, i) => (
-              <span
-                key={s}
-                className={`progress-label${i === step ? ' active' : i < step ? ' done' : ''}`}
-              >
-                {s}
-              </span>
-            ))}
-          </div>
-          <div className="progress-track">
-            <div className="progress-fill" style={{ width: `${progress}%` }} />
-          </div>
-        </div>
-
         {apiError && <div className="error-banner">⚠ {apiError}</div>}
 
-        {step === 0 && <StepProfile form={form} errors={errors} set={set} />}
-        {step === 1 && <StepTax form={form} errors={errors} set={set} />}
-        {step === 2 && <StepRules form={form} errors={errors} set={set} />}
-        {step === 3 && <StepMedia form={form} errors={errors} set={set} />}
-        {step === 4 && <StepSignature form={form} errors={errors} set={set} />}
+        <StepProfile
+          form={form}
+          errors={errors}
+          set={set}
+          cities={Object.keys(CITY_LGA_AREA_MAP)}
+          lgas={form.city ? Object.keys(CITY_LGA_AREA_MAP[form.city]) : []}
+          areas={form.city && form.lga ? CITY_LGA_AREA_MAP[form.city][form.lga] || [] : []}
+        />
 
-        {/* Navigation */}
         <div className="nav-buttons">
-          {step > 0 ? (
-            <button className="btn btn-ghost" onClick={back}>
-              ← Back
-            </button>
-          ) : (
-            <span />
-          )}
-
-          {step < STEPS.length - 1 ? (
-            <button className="btn btn-primary" onClick={next}>
-              Continue →
-            </button>
-          ) : (
-            <button className="btn btn-submit" onClick={handleSubmit} disabled={submitting}>
-              {submitting ? 'Enrolling...' : '⚡ Complete Enrollment'}
-            </button>
-          )}
+          <button className="btn btn-submit" onClick={handleSubmit} disabled={submitting}>
+            {submitting ? 'Submitting...' : 'Submit'}
+          </button>
         </div>
       </div>
     </div>

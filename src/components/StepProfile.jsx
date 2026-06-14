@@ -1,6 +1,6 @@
 import Field from './Field';
 
-export default function StepProfile({ form, errors, set }) {
+export default function StepProfile({ form, errors, set, cities, lgas, areas }) {
   return (
     <div className="form-card" data-section="01">
       <div className="section-title">Section 1</div>
@@ -14,12 +14,20 @@ export default function StepProfile({ form, errors, set }) {
             onChange={e => set('hubLocation', e.target.value)}
           />
         </Field>
-        <Field label="Full Name" error={errors.fullName} full>
+        <Field label="First Name" error={errors.firstName} full>
           <input
-            className={errors.fullName ? 'error' : ''}
-            placeholder="As it appears on your ID"
-            value={form.fullName}
-            onChange={e => set('fullName', e.target.value)}
+            className={errors.firstName ? 'error' : ''}
+            placeholder="First name"
+            value={form.firstName}
+            onChange={e => set('firstName', e.target.value)}
+          />
+        </Field>
+        <Field label="Last Name" error={errors.lastName}>
+          <input
+            className={errors.lastName ? 'error' : ''}
+            placeholder="Last name"
+            value={form.lastName}
+            onChange={e => set('lastName', e.target.value)}
           />
         </Field>
         <Field label="Username" error={errors.username} full>
@@ -37,6 +45,52 @@ export default function StepProfile({ form, errors, set }) {
             value={form.dateOfBirth}
             onChange={e => set('dateOfBirth', e.target.value)}
           />
+        </Field>
+        <Field label="City" error={errors.city}>
+          <select
+            className={errors.city ? 'error' : ''}
+            value={form.city}
+            onChange={e => set('city', e.target.value)}
+          >
+            <option value="">Select a city</option>
+            {cities.map(city => (
+              <option key={city} value={city}>
+                {city}
+              </option>
+            ))}
+          </select>
+        </Field>
+        <Field label="LGA" error={errors.lga}>
+          <select
+            className={errors.lga ? 'error' : ''}
+            value={form.lga}
+            onChange={e => set('lga', e.target.value)}
+            disabled={!form.city}
+          >
+            <option value="">Select an LGA</option>
+            {lgas.map(lga => (
+              <option key={lga} value={lga}>
+                {lga}
+              </option>
+            ))}
+          </select>
+        </Field>
+        <Field label="Area" error={errors.area}>
+          <select
+            className={errors.area ? 'error' : ''}
+            value={form.area}
+            onChange={e => set('area', e.target.value)}
+            disabled={!form.lga || areas.length === 0}
+          >
+            <option value="">
+              {areas.length ? 'Select an area' : 'No areas available'}
+            </option>
+            {areas.map(area => (
+              <option key={area} value={area}>
+                {area}
+              </option>
+            ))}
+          </select>
         </Field>
         <Field label="Phone Number" error={errors.phoneNumber}>
           <input
