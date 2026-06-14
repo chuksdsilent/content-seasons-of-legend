@@ -5,7 +5,7 @@ import StepProfile from './components/StepProfile';
 import SuccessScreen from './components/SuccessScreen';
 import logo from './assets/logo.jpeg';
 
-const API_BASE = 'http://localhost:5000/api/auth';
+const API_BASE = 'https://localhost:5000/api/auth';
 
 const CITY_LGA_AREA_MAP = {
   Enugu: {
