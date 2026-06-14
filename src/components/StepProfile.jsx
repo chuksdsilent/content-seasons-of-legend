@@ -100,6 +100,23 @@ export default function StepProfile({ form, errors, set, cities, lgas, areas }) 
             onChange={e => set('phoneNumber', e.target.value)}
           />
         </Field>
+        <Field label="Email" error={errors.email}>
+          <input
+            type="email"
+            className={errors.email ? 'error' : ''}
+            placeholder="you@example.com"
+            value={form.email}
+            onChange={e => set('email', e.target.value)}
+          />
+        </Field>
+        <Field label="WhatsApp Number" error={errors.whatsapp}>
+          <input
+            className={errors.whatsapp ? 'error' : ''}
+            placeholder="+234 xxx xxx xxxx"
+            value={form.whatsapp}
+            onChange={e => set('whatsapp', e.target.value)}
+          />
+        </Field>
         <Field label="Valid ID Type">
           <select value={form.idType} onChange={e => set('idType', e.target.value)}>
             <option value="NIN">NIN — National Identification Number</option>
