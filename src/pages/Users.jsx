@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link, Navigate } from 'react-router-dom';
-import '../admin/Dashboard.css';
+import '../admin/dashboard.css';
 
 const SAMPLE_USERS = [
   { fullName: 'John Doe',       phoneNumber: '+2348011111111', createdAt: '2026-05-28 09:10 AM', idType: 'NIN' },
