@@ -41,7 +41,6 @@ export default function StepProfile({ form, errors, set, cities, zones, submitRe
 
   return (
     <div className="form-card" data-section="01">
-      <div className="section-title">Section 1</div>
       <div className="section-heading">Athlete Profile</div>
 
       {submitResult ? (
@@ -49,14 +48,6 @@ export default function StepProfile({ form, errors, set, cities, zones, submitRe
       ) : (
         <>
         <div className="field-grid">
-          <Field label="Hub Location" error={errors.hubLocation} full>
-            <input
-              className={errors.hubLocation ? 'error' : ''}
-              placeholder="e.g. Lagos Hub — The Grid Lounge"
-              value={form.hubLocation}
-              onChange={e => set('hubLocation', e.target.value)}
-            />
-          </Field>
           <Field label="First Name" error={errors.firstName}>
             <input
               className={errors.firstName ? 'error' : ''}
@@ -89,7 +80,7 @@ export default function StepProfile({ form, errors, set, cities, zones, submitRe
               onChange={e => set('dateOfBirth', e.target.value)}
             />
           </Field>
-          <Field label="City" error={errors.city}>
+          <Field label="Select a City" error={errors.city}>
             <select
               className={errors.city ? 'error' : ''}
               value={form.city}

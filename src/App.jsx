@@ -34,7 +34,6 @@ const ZONE_MAP = {
 };
 
 const INITIAL_FORM = {
-  hubLocation: '',
   firstName: '',
   lastName: '',
   username: '',
@@ -76,7 +75,6 @@ export default function App() {
   const validateProfile = () => {
     const errs = {};
 
-    if (!form.hubLocation.trim()) errs.hubLocation = 'Hub location is required';
     if (!form.firstName.trim()) errs.firstName = 'First name is required';
     if (!form.lastName.trim()) errs.lastName = 'Last name is required';
     if (!form.username.trim()) errs.username = 'Username is required';
@@ -165,6 +163,14 @@ export default function App() {
           </div>
         )}
       </div>
+
+      <footer className="site-footer">
+        <p className="site-footer__label">Contact &amp; Enquiries</p>
+        <a href="mailto:Info@seasonoflegends.com" className="site-footer__email">
+          Info@seasonoflegends.com
+        </a>
+        <Link to="/about" className="site-footer__about">About Us</Link>
+      </footer>
     </div>
   );
 }
