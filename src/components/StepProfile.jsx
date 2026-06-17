@@ -139,21 +139,6 @@ export default function StepProfile({ form, errors, set, cities, zones, submitRe
               onChange={e => set('whatsapp', e.target.value)}
             />
           </Field>
-          <Field label="Valid ID Type">
-            <select value={form.idType} onChange={e => set('idType', e.target.value)}>
-              <option value="NIN">NIN — National Identification Number</option>
-              <option value="Passport">International Passport</option>
-              <option value="Drivers License">Driver&apos;s License</option>
-            </select>
-          </Field>
-          <Field label="ID Number" error={errors.idNumber}>
-            <input
-              className={errors.idNumber ? 'error' : ''}
-              placeholder="Enter your ID number"
-              value={form.idNumber}
-              onChange={e => set('idNumber', e.target.value)}
-            />
-          </Field>
           <Field label="Referral Code" error={errors.referralCode}>
             <input
               className={errors.referralCode ? 'error' : ''}

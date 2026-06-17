@@ -42,8 +42,6 @@ const INITIAL_FORM = {
   city: '',
   zone: '',
   referralCode: '',
-  idType: 'NIN',
-  idNumber: '',
   phoneNumber: '',
   taxAcknowledged: false,
   antiWageringAgreed: false,
@@ -91,7 +89,6 @@ export default function App() {
     }
     if (!form.city) errs.city = 'City is required';
     if (!form.zone) errs.zone = 'Zone is required';
-    if (!form.idNumber.trim()) errs.idNumber = 'ID number is required';
     if (!form.phoneNumber.trim()) errs.phoneNumber = 'Phone number is required';
     if (!form.termsAccepted) errs.termsAccepted = 'You must accept the terms and conditions';
 
