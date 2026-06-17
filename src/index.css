@@ -72,6 +72,19 @@ body {
   letter-spacing: 1px;
   font-weight: 400;
 }
+.site-header .about-link {
+  display: block;
+  margin-top: 12px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: #fff;
+  text-decoration: none;
+}
+.site-header .about-link:hover {
+  color: var(--gold);
+}
 
 /* ── Layout ── */
 .container {

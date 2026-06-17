@@ -36,7 +36,9 @@ function ProfileResult({ submitResult }) {
   );
 }
 
-export default function StepProfile({ form, errors, set, cities, lgas, areas, submitResult }) {
+export default function StepProfile({ form, errors, set, cities, zones, submitResult }) {
+  const zoneLabel = form.city ? `${form.city} Zone` : 'Zone';
+
   return (
     <div className="form-card" data-section="01">
       <div className="section-title">Section 1</div>
@@ -99,29 +101,16 @@ export default function StepProfile({ form, errors, set, cities, lgas, areas, su
               ))}
             </select>
           </Field>
-          <Field label="LGA" error={errors.lga}>
+          <Field label={zoneLabel} error={errors.zone}>
             <select
-              className={errors.lga ? 'error' : ''}
-              value={form.lga}
-              onChange={e => set('lga', e.target.value)}
+              className={errors.zone ? 'error' : ''}
+              value={form.zone}
+              onChange={e => set('zone', e.target.value)}
               disabled={!form.city}
             >
-              <option value="">Select an LGA</option>
-              {lgas.map(lga => (
-                <option key={lga} value={lga}>{lga}</option>
-              ))}
-            </select>
-          </Field>
-          <Field label="Area" error={errors.area}>
-            <select
-              className={errors.area ? 'error' : ''}
-              value={form.area}
-              onChange={e => set('area', e.target.value)}
-              disabled={!form.lga || areas.length === 0}
-            >
-              <option value="">{areas.length ? 'Select an area' : 'No areas available'}</option>
-              {areas.map(area => (
-                <option key={area} value={area}>{area}</option>
+              <option value="">{form.city ? `Select ${zoneLabel}` : 'Select a city first'}</option>
+              {zones.map(zone => (
+                <option key={zone} value={zone}>{zone}</option>
               ))}
             </select>
           </Field>
@@ -163,6 +152,14 @@ export default function StepProfile({ form, errors, set, cities, lgas, areas, su
               placeholder="Enter your ID number"
               value={form.idNumber}
               onChange={e => set('idNumber', e.target.value)}
+            />
+          </Field>
+          <Field label="Referral Code" error={errors.referralCode}>
+            <input
+              className={errors.referralCode ? 'error' : ''}
+              placeholder="Enter referral code (optional)"
+              value={form.referralCode}
+              onChange={e => set('referralCode', e.target.value)}
             />
           </Field>
         </div>

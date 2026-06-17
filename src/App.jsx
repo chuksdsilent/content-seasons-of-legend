@@ -3,51 +3,34 @@ import Swal from 'sweetalert2';
 
 import StepProfile from './components/StepProfile';
 import SuccessScreen from './components/SuccessScreen';
-import logo from './assets/logo.jpeg';
+import logo from './assets/logo.png';
+import { Link } from 'react-router-dom';
 
 const API_BASE = 'https://localhost:5000/api/auth';
 
-const CITY_LGA_AREA_MAP = {
-  Enugu: {
-    'Enugu North Areas': [
-      'GRA',
-      'Independence Layout',
-      'New Haven',
-      'Ogui',
-      'Asata',
-      'Iva Valley',
-    ],
-    'Enugu South Areas': [
-      'Uwani',
-      'Achara Layout',
-      'Garriki',
-      'Akwuke',
-      'Amechi',
-      'Ugwuaji',
-    ],
-    'Enugu East Areas': [
-      'Trans-Ekulu',
-      'Abakpa Nike',
-      'Emene',
-      'Thinkers Corner',
-    ],
-    Agbani: [],
-  },
-  Nsukka: {
-    'Zone 1': [
-      'GRA',
-      'Aku Road/New Anglican Road',
-      'Odenigbo/barracks',
-      'Ugwuechara/ Obaechara',
-    ],
-    'Zone 2': [
-      'UNN/University road',
-      'Onuiyi/beach',
-      'Ibeagwa road',
-      'Hill top/Odenigwe',
-    ],
-    'Zone 3': ['Nru', 'Orba', 'Ugwuoye'],
-  },
+const ZONE_MAP = {
+  Enugu: [
+    'GRA/Trans-Ekulu',
+    'Independence Layout/Ugwuaji',
+    'New Haven',
+    'Ogui/Asata',
+    'Iva Valley',
+    'Uwani/Achara Layout',
+    'Garriki/Akwuke/Amechi',
+    'Abakpa',
+    'Emene',
+    'Thinkers Corner',
+    'Agbani',
+  ],
+  Nsukka: [
+    'Nsukka town',
+    'Unn',
+    'Obollo-Afor',
+    'Ogrute',
+    'Ibagwa',
+    'Orba',
+    'Adani',
+  ],
 };
 
 const INITIAL_FORM = {
@@ -57,8 +40,8 @@ const INITIAL_FORM = {
   username: '',
   dateOfBirth: '',
   city: '',
-  lga: '',
-  area: '',
+  zone: '',
+  referralCode: '',
   idType: 'NIN',
   idNumber: '',
   phoneNumber: '',
@@ -83,21 +66,17 @@ export default function App() {
     setForm(f => ({
       ...f,
       [key]: val,
-      ...(key === 'city' ? { lga: '', area: '' } : {}),
-      ...(key === 'lga' ? { area: '' } : {}),
+      ...(key === 'city' ? { zone: '' } : {}),
     }));
     setErrors(e => ({
       ...e,
       [key]: '',
-      ...(key === 'city' ? { lga: '', area: '' } : {}),
-      ...(key === 'lga' ? { area: '' } : {}),
+      ...(key === 'city' ? { zone: '' } : {}),
     }));
   };
 
   const validateProfile = () => {
     const errs = {};
-    const selectedAreaOptions =
-      form.city && form.lga ? CITY_LGA_AREA_MAP[form.city][form.lga] || [] : [];
 
     if (!form.hubLocation.trim()) errs.hubLocation = 'Hub location is required';
     if (!form.firstName.trim()) errs.firstName = 'First name is required';
@@ -111,8 +90,7 @@ export default function App() {
       if (age < 18) errs.dateOfBirth = 'Athlete must be 18 or older';
     }
     if (!form.city) errs.city = 'City is required';
-    if (!form.lga) errs.lga = 'LGA is required';
-    if (selectedAreaOptions.length && !form.area) errs.area = 'Area is required';
+    if (!form.zone) errs.zone = 'Zone is required';
     if (!form.idNumber.trim()) errs.idNumber = 'ID number is required';
     if (!form.phoneNumber.trim()) errs.phoneNumber = 'Phone number is required';
     if (!form.termsAccepted) errs.termsAccepted = 'You must accept the terms and conditions';
@@ -163,8 +141,11 @@ export default function App() {
 
   return (
     <div>
-      <header className="site-header">
+      <header className="site-header ">
         <img src={logo} alt="logo" height={200} className="mb-4" />
+        <Link to="/about" className="about-link">
+          About Us
+        </Link>
       </header>
 
       <div className="container">
@@ -174,9 +155,8 @@ export default function App() {
           form={form}
           errors={errors}
           set={set}
-          cities={Object.keys(CITY_LGA_AREA_MAP)}
-          lgas={form.city ? Object.keys(CITY_LGA_AREA_MAP[form.city]) : []}
-          areas={form.city && form.lga ? CITY_LGA_AREA_MAP[form.city][form.lga] || [] : []}
+          cities={Object.keys(ZONE_MAP)}
+          zones={form.city ? ZONE_MAP[form.city] || [] : []}
           submitResult={submitResult}
         />
 
