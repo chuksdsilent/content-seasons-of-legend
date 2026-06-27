@@ -40,7 +40,7 @@ export default function StepProfile({ form, errors, set, cities, zones, submitRe
   const zoneLabel = form.city ? `${form.city} Zone` : 'Zone';
 
   return (
-    <div className="form-card" data-section="01">
+    <div className="form-card">
       <div className="section-heading">Athlete Profile</div>
 
       {submitResult ? (
@@ -137,6 +137,89 @@ export default function StepProfile({ form, errors, set, cities, zones, submitRe
               value={form.referralCode}
               onChange={e => set('referralCode', e.target.value)}
             />
+          </Field>
+        </div>
+
+        <hr className="social-section-divider" />
+
+        <div className="social-section-title">
+          Creator Profiles
+          <span className="optional-tag">All Optional</span>
+        </div>
+        <p className="social-section-note">
+          Share your social handles so we can tag you in tournament content and announcements.
+        </p>
+
+        <div className="field-grid">
+          <Field label="Instagram" error={errors.instagram}>
+            <div className={`social-input-wrap${errors.instagram ? ' error' : ''}`}>
+              <span className="social-prefix">instagram.com/</span>
+              <input
+                placeholder="username"
+                value={form.instagram}
+                onChange={e => set('instagram', e.target.value)}
+              />
+            </div>
+          </Field>
+          <Field label="TikTok" error={errors.tiktok}>
+            <div className={`social-input-wrap${errors.tiktok ? ' error' : ''}`}>
+              <span className="social-prefix">tiktok.com/@</span>
+              <input
+                placeholder="username"
+                value={form.tiktok}
+                onChange={e => set('tiktok', e.target.value)}
+              />
+            </div>
+          </Field>
+          <Field label="YouTube" error={errors.youtube}>
+            <div className={`social-input-wrap${errors.youtube ? ' error' : ''}`}>
+              <span className="social-prefix">youtube.com/</span>
+              <input
+                placeholder="@channel or /c/channel"
+                value={form.youtube}
+                onChange={e => set('youtube', e.target.value)}
+              />
+            </div>
+          </Field>
+          <Field label="Twitter / X" error={errors.twitter}>
+            <div className={`social-input-wrap${errors.twitter ? ' error' : ''}`}>
+              <span className="social-prefix">x.com/</span>
+              <input
+                placeholder="username"
+                value={form.twitter}
+                onChange={e => set('twitter', e.target.value)}
+              />
+            </div>
+          </Field>
+          <Field label="Facebook" error={errors.facebook}>
+            <div className={`social-input-wrap${errors.facebook ? ' error' : ''}`}>
+              <span className="social-prefix">facebook.com/</span>
+              <input
+                placeholder="page or profile"
+                value={form.facebook}
+                onChange={e => set('facebook', e.target.value)}
+              />
+            </div>
+          </Field>
+          <Field label="LinkedIn" error={errors.linkedin}>
+            <div className={`social-input-wrap${errors.linkedin ? ' error' : ''}`}>
+              <span className="social-prefix">linkedin.com/in/</span>
+              <input
+                placeholder="profile"
+                value={form.linkedin}
+                onChange={e => set('linkedin', e.target.value)}
+              />
+            </div>
+          </Field>
+          <Field label="Twitch" error={errors.twitch}>
+            <div className={`social-input-wrap${errors.twitch ? ' error' : ''}`}>
+              <span className="social-prefix">twitch.tv/</span>
+              <input
+                placeholder="username"
+                value={form.twitch}
+                onChange={e => set('twitch', e.target.value)}
+              />
+            </div>
           </Field>
         </div>
 

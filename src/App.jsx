@@ -1,12 +1,15 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import Swal from 'sweetalert2';
+import { useFlutterwave, closePaymentModal } from 'flutterwave-react-v3';
 
 import StepProfile from './components/StepProfile';
 import SuccessScreen from './components/SuccessScreen';
 import logo from './assets/logo.png';
 import { Link } from 'react-router-dom';
 
-const API_BASE = 'https://localhost:5000/api/auth';
+const FLW_PUBLIC_KEY = 'FLWPUBK_TEST-c42feefcc2d845a143f3deb32fcec27d-X'; // Replace with your Flutterwave public key
+
+const API_BASE = 'http://localhost:5000/api/auth';
 
 const ZONE_MAP = {
   Enugu: [
@@ -34,6 +37,7 @@ const ZONE_MAP = {
 };
 
 const INITIAL_FORM = {
+  role: 'Content Creator',
   firstName: '',
   lastName: '',
   username: '',
@@ -42,6 +46,15 @@ const INITIAL_FORM = {
   zone: '',
   referralCode: '',
   phoneNumber: '',
+  email: '',
+  whatsapp: '',
+  instagram: '',
+  tiktok: '',
+  youtube: '',
+  twitter: '',
+  facebook: '',
+  linkedin: '',
+  twitch: '',
   taxAcknowledged: false,
   antiWageringAgreed: false,
   hardwareIntegrityAgreed: false,
@@ -58,6 +71,27 @@ export default function App() {
   const [apiError, setApiError] = useState('');
   const [errors, setErrors] = useState({});
   const [form, setForm] = useState(INITIAL_FORM);
+  const formRef = useRef(form);
+  formRef.current = form;
+
+  const flwConfig = {
+    public_key: FLW_PUBLIC_KEY,
+    tx_ref: `SOL-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+    amount: 1000,
+    currency: 'NGN',
+    payment_options: 'card,bank_transfer',
+    customer: {
+      email: form.email,
+      phone_number: form.phoneNumber,
+      name: `${form.firstName} ${form.lastName}`.trim(),
+    },
+    customizations: {
+      title: 'Seasons of Legends',
+      description: 'Tournament Registration Fee - ₦1,000',
+    },
+  };
+
+  const handleFlutterPayment = useFlutterwave(flwConfig);
 
   const set = (key, val) => {
     setForm(f => ({
@@ -88,20 +122,61 @@ export default function App() {
     if (!form.city) errs.city = 'City is required';
     if (!form.zone) errs.zone = 'Zone is required';
     if (!form.phoneNumber.trim()) errs.phoneNumber = 'Phone number is required';
+    if (!form.email.trim()) errs.email = 'Email is required';
     if (!form.termsAccepted) errs.termsAccepted = 'You must accept the terms and conditions';
 
     setErrors(errs);
     return Object.keys(errs).length === 0;
   };
 
-  const handleSubmit = async () => {
-    if (!validateProfile()) return;
+  const initiatePayment = async (txRef) => {
+    const payload = {
+      ...Object.fromEntries(
+        Object.entries(formRef.current).map(([k, v]) => [k, typeof v === 'boolean' ? String(v) : v])
+      ),
+      tx_ref: txRef,
+      status: 'pending',
+    };
+    try {
+      const res = await fetch(`${API_BASE}/payment/initiate`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      const data = await res.json();
+      if (!res.ok || data.message === 'error') {
+        setApiError(data.message || 'Could not initiate payment. Please try again.');
+        return false;
+      }
+      return true;
+    } catch {
+      setApiError('Could not reach the server. Please try again.');
+      return false;
+    }
+  };
+
+  const cancelPayment = async (txRef) => {
+    try {
+      await fetch(`${API_BASE}/payment/cancel`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ tx_ref: txRef, status: 'cancelled' }),
+      });
+    } catch {
+      // non-critical
+    }
+  };
+
+  const registerUser = async (transaction) => {
     setSubmitting(true);
     setApiError('');
 
-    const payload = Object.fromEntries(
-      Object.entries(form).map(([k, v]) => [k, typeof v === 'boolean' ? String(v) : v])
-    );
+    const payload = {
+      ...Object.fromEntries(
+        Object.entries(formRef.current).map(([k, v]) => [k, typeof v === 'boolean' ? String(v) : v])
+      ),
+      transaction,
+    };
 
     try {
       const res = await fetch(`${API_BASE}/register`, {
@@ -134,13 +209,64 @@ export default function App() {
     }
   };
 
+  const handleSubmit = async () => {
+    if (!validateProfile()) return;
+
+    const txRef = flwConfig.tx_ref;
+    setSubmitting(true);
+    setApiError('');
+
+    const initiated = await initiatePayment(txRef);
+    if (!initiated) {
+      setSubmitting(false);
+      return;
+    }
+
+    let paymentCompleted = false;
+
+    handleFlutterPayment({
+      callback: async (response) => {
+        paymentCompleted = true;
+        closePaymentModal();
+        if (response.status === 'successful' || response.status === 'completed') {
+          await registerUser(response);
+        } else {
+          Swal.fire({
+            toast: true,
+            position: 'top-end',
+            icon: 'error',
+            title: 'Payment was not completed. Please try again.',
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+          });
+          setSubmitting(false);
+        }
+      },
+      onClose: async () => {
+        if (!paymentCompleted) {
+          setSubmitting(false);
+          await cancelPayment(txRef);
+          setForm(INITIAL_FORM);
+          setErrors({});
+          Swal.fire({
+            toast: true,
+            position: 'top-end',
+            icon: 'info',
+            title: 'Payment cancelled.',
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+          });
+        }
+      },
+    });
+  };
+
   return (
     <div>
       <header className="site-header ">
         <img src={logo} alt="logo" height={200} className="mb-4" />
-        <Link to="/about" className="about-link">
-          About Us
-        </Link>
       </header>
 
       <div className="container">
