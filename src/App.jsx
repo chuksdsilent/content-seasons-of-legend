@@ -9,7 +9,7 @@ import { Link } from 'react-router-dom';
 
 const FLW_PUBLIC_KEY = import.meta.env.VITE_FLW_PUBLIC_KEY;
 const API_BASE = import.meta.env.VITE_API_BASE;
-const VITE_AMOUNT = import.meta.env.VITE_AMOUNT;
+const AMOUNT = import.meta.env.VITE_AMOUNT;
 
 const ZONE_MAP = {
   Enugu: [
