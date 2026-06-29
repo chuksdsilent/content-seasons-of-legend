@@ -7,9 +7,8 @@ import SuccessScreen from './components/SuccessScreen';
 import logo from './assets/logo.png';
 import { Link } from 'react-router-dom';
 
-const FLW_PUBLIC_KEY = 'FLWPUBK_TEST-c42feefcc2d845a143f3deb32fcec27d-X'; // Replace with your Flutterwave public key
-
-const API_BASE = 'http://localhost:5000/api/auth';
+const FLW_PUBLIC_KEY = import.meta.env.VITE_FLW_PUBLIC_KEY;
+const API_BASE = import.meta.env.VITE_API_BASE;
 
 const ZONE_MAP = {
   Enugu: [
