@@ -9,7 +9,7 @@ import { Link } from 'react-router-dom';
 
 const FLW_PUBLIC_KEY = import.meta.env.VITE_FLW_PUBLIC_KEY;
 const API_BASE = import.meta.env.VITE_API_BASE;
-const AMOUNT = import.meta.env.VITE_AMOUNT;
+const VITE_AMOUNT = import.meta.env.VITE_AMOUNT;
 
 const ZONE_MAP = {
   Enugu: [
@@ -77,7 +77,7 @@ export default function App() {
   const flwConfig = {
     public_key: FLW_PUBLIC_KEY,
     tx_ref: `SOL-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
-    amount: AMOUNT,
+    amount: 200,
     currency: 'NGN',
     payment_options: 'card,bank_transfer',
     customer: {
