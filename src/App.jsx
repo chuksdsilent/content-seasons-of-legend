@@ -77,7 +77,7 @@ export default function App() {
   const flwConfig = {
     public_key: FLW_PUBLIC_KEY,
     tx_ref: `SOL-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
-    amount: 1000,
+    amount: AMOUNT,
     currency: 'NGN',
     payment_options: 'card,bank_transfer',
     customer: {
