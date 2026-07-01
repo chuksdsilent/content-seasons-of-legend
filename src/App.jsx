@@ -84,6 +84,7 @@ export default function App() {
       email: form.email,
       phone_number: form.phoneNumber,
       name: `${form.firstName} ${form.lastName}`.trim(),
+      id: form.phoneNumber,
     },
     customizations: {
       title: 'Seasons of Legends',
