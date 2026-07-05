@@ -549,7 +549,14 @@ body {
 .profile-result__divider {
   width: 60px; height: 2px;
   background: linear-gradient(90deg, transparent, var(--primary), transparent);
-  margin-bottom: 28px;
+  margin-bottom: 16px;
+}
+.profile-result__hint {
+  font-size: 12px;
+  color: var(--muted);
+  text-align: center;
+  margin-bottom: 16px;
+  line-height: 1.5;
 }
 .profile-result__tid-block {
   background: var(--bg);

@@ -16,12 +16,18 @@ function ProfileResult({ submitResult }) {
       </h2>
 
       <div className="profile-result__divider" />
-
+      <p className="profile-result__hint">
+        Keep this somewhere safe. You will need it to access your tournament profile and results.
+      </p>
       <div className="profile-result__tid-block">
         <span className="profile-result__tid-label">Tournament ID</span>
         <span className="profile-result__tid-value">{submitResult.tournamentId}</span>
       </div>
 
+      <div className="profile-result__divider" />
+      <p className="profile-result__hint">
+        Keep this somewhere safe. You will need it to access your tournament profile and results.
+      </p>
       <div className="profile-result__fields">
         <div className="profile-result__field">
           <span className="profile-result__field-label">First Name</span>
@@ -36,13 +42,9 @@ function ProfileResult({ submitResult }) {
   );
 }
 
-export default function StepProfile({ form, errors, set, cities, zones, submitResult }) {
-  const zoneLabel = form.city ? `${form.city} Zone` : 'Zone';
-
+export default function StepProfile({ form, errors, set, submitResult }) {
   return (
     <div className="form-card">
-      <div className="section-heading">Athlete Profile</div>
-
       {submitResult ? (
         <ProfileResult submitResult={submitResult} />
       ) : (
@@ -59,7 +61,7 @@ export default function StepProfile({ form, errors, set, cities, zones, submitRe
           <Field label="Last Name" error={errors.lastName}>
             <input
               className={errors.lastName ? 'error' : ''}
-              placeholder="Last name"
+              placeholder="Surname"
               value={form.lastName}
               onChange={e => set('lastName', e.target.value)}
             />
@@ -79,31 +81,6 @@ export default function StepProfile({ form, errors, set, cities, zones, submitRe
               value={form.dateOfBirth}
               onChange={e => set('dateOfBirth', e.target.value)}
             />
-          </Field>
-          <Field label="Select a City" error={errors.city}>
-            <select
-              className={errors.city ? 'error' : ''}
-              value={form.city}
-              onChange={e => set('city', e.target.value)}
-            >
-              <option value="">Select a city</option>
-              {cities.map(city => (
-                <option key={city} value={city}>{city}</option>
-              ))}
-            </select>
-          </Field>
-          <Field label={zoneLabel} error={errors.zone}>
-            <select
-              className={errors.zone ? 'error' : ''}
-              value={form.zone}
-              onChange={e => set('zone', e.target.value)}
-              disabled={!form.city}
-            >
-              <option value="">{form.city ? `Select ${zoneLabel}` : 'Select a city first'}</option>
-              {zones.map(zone => (
-                <option key={zone} value={zone}>{zone}</option>
-              ))}
-            </select>
           </Field>
           <Field label="Phone Number" error={errors.phoneNumber}>
             <input

@@ -5,36 +5,12 @@ import { useFlutterwave, closePaymentModal } from 'flutterwave-react-v3';
 import StepProfile from './components/StepProfile';
 import SuccessScreen from './components/SuccessScreen';
 import logo from './assets/logo.png';
+import termsPdf from './assets/rules, regulations and terms.pdf';
 import { Link } from 'react-router-dom';
 
 const FLW_PUBLIC_KEY = import.meta.env.VITE_FLW_PUBLIC_KEY;
 const API_BASE = import.meta.env.VITE_API_BASE;
 const AMOUNT = import.meta.env.VITE_AMOUNT;
-
-const ZONE_MAP = {
-  Enugu: [
-    'GRA/Trans-Ekulu',
-    'Independence Layout/Ugwuaji',
-    'New Haven',
-    'Ogui/Asata',
-    'Iva Valley',
-    'Uwani/Achara Layout',
-    'Garriki/Akwuke/Amechi',
-    'Abakpa',
-    'Emene',
-    'Thinkers Corner',
-    'Agbani',
-  ],
-  Nsukka: [
-    'Nsukka town',
-    'Unn',
-    'Obollo-Afor',
-    'Ogrute',
-    'Ibagwa',
-    'Orba',
-    'Adani',
-  ],
-};
 
 const INITIAL_FORM = {
   role: 'Content Creator',
@@ -42,8 +18,6 @@ const INITIAL_FORM = {
   lastName: '',
   username: '',
   dateOfBirth: '',
-  city: '',
-  zone: '',
   referralCode: '',
   phoneNumber: '',
   email: '',
@@ -95,16 +69,8 @@ export default function App() {
   const handleFlutterPayment = useFlutterwave(flwConfig);
 
   const set = (key, val) => {
-    setForm(f => ({
-      ...f,
-      [key]: val,
-      ...(key === 'city' ? { zone: '' } : {}),
-    }));
-    setErrors(e => ({
-      ...e,
-      [key]: '',
-      ...(key === 'city' ? { zone: '' } : {}),
-    }));
+    setForm(f => ({ ...f, [key]: val }));
+    setErrors(e => ({ ...e, [key]: '' }));
   };
 
   const validateProfile = () => {
@@ -120,8 +86,6 @@ export default function App() {
       const age = new Date().getFullYear() - dob.getFullYear();
       if (age < 18) errs.dateOfBirth = 'Athlete must be 18 or older';
     }
-    if (!form.city) errs.city = 'City is required';
-    if (!form.zone) errs.zone = 'Zone is required';
     if (!form.phoneNumber.trim()) errs.phoneNumber = 'Phone number is required';
     if (!form.email.trim()) errs.email = 'Email is required';
     if (!form.termsAccepted) errs.termsAccepted = 'You must accept the terms and conditions';
@@ -277,8 +241,6 @@ export default function App() {
           form={form}
           errors={errors}
           set={set}
-          cities={Object.keys(ZONE_MAP)}
-          zones={form.city ? ZONE_MAP[form.city] || [] : []}
           submitResult={submitResult}
         />
 
@@ -296,7 +258,7 @@ export default function App() {
         <a href="mailto:Info@seasonoflegends.com" className="site-footer__email">
           Info@seasonoflegends.com
         </a>
-        <Link to="/about" className="site-footer__about">About Us</Link>
+        <a href={termsPdf} target="_blank" rel="noopener noreferrer" className="site-footer__about">About Us</a>
       </footer>
     </div>
   );
