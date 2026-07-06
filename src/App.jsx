@@ -5,7 +5,7 @@ import { useFlutterwave, closePaymentModal } from 'flutterwave-react-v3';
 import StepProfile from './components/StepProfile';
 import SuccessScreen from './components/SuccessScreen';
 import logo from './assets/logo.png';
-import termsPdf from './assets/rules, regulations and terms.pdf';
+import termsPdf from './assets/agreement.pdf';
 import { Link } from 'react-router-dom';
 
 const FLW_PUBLIC_KEY = import.meta.env.VITE_FLW_PUBLIC_KEY;
