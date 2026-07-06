@@ -1,5 +1,5 @@
 import Field from './Field';
-import termsPdf from '../assets/rules, regulations and terms.pdf';
+import termsPdf from '../assets/agreement.pdf';
 
 function ProfileResult({ submitResult }) {
   return (
