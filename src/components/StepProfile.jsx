@@ -42,7 +42,7 @@ function ProfileResult({ submitResult }) {
   );
 }
 
-export default function StepProfile({ form, errors, set, onPhoneBlur, submitResult }) {
+export default function StepProfile({ form, errors, set, onPhoneBlur, onUsernameBlur, onEmailBlur, submitResult }) {
   return (
     <div className="form-card">
       {submitResult ? (
@@ -72,6 +72,7 @@ export default function StepProfile({ form, errors, set, onPhoneBlur, submitResu
               placeholder="Enter Username"
               value={form.username}
               onChange={e => set('username', e.target.value)}
+              onBlur={onUsernameBlur}
             />
           </Field>
           <Field label="Date of Birth" error={errors.dateOfBirth}>
@@ -98,6 +99,7 @@ export default function StepProfile({ form, errors, set, onPhoneBlur, submitResu
               placeholder="you@example.com"
               value={form.email}
               onChange={e => set('email', e.target.value)}
+              onBlur={onEmailBlur}
             />
           </Field>
           <Field label="WhatsApp Number" error={errors.whatsapp}>

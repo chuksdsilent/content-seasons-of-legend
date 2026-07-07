@@ -94,15 +94,19 @@ export default function App() {
     return Object.keys(errs).length === 0;
   };
 
-  const checkPhone = async (phone) => {
+  const checkField = async (key, value) => {
     try {
-      const res = await fetch(`${API_BASE}/check-user?phone=${encodeURIComponent(phone)}`);
+      const res = await fetch(`${API_BASE}/check-user?${key}=${encodeURIComponent(value)}`);
       const data = await res.json();
       return data?.exists ?? null;
     } catch {
       return null;
     }
   };
+
+  const checkPhone = (phone) => checkField('phone', phone);
+  const checkUsername = (username) => checkField('username', username);
+  const checkEmail = (email) => checkField('email', email);
 
   const initiatePayment = async (txRef) => {
     const payload = {
@@ -194,20 +198,50 @@ export default function App() {
     }
   };
 
+  const onUsernameBlur = async () => {
+    if (!form.username.trim()) return;
+    const exists = await checkUsername(form.username);
+    if (exists === null) {
+      setApiError('Could not reach the server. Please try again.');
+    } else if (exists) {
+      setErrors(e => ({ ...e, username: 'Username already exists.' }));
+    }
+  };
+
+  const onEmailBlur = async () => {
+    if (!form.email.trim()) return;
+    const exists = await checkEmail(form.email);
+    if (exists === null) {
+      setApiError('Could not reach the server. Please try again.');
+    } else if (exists) {
+      setErrors(e => ({ ...e, email: 'Email already exists.' }));
+    }
+  };
+
   const handleSubmit = async () => {
     if (!validateProfile()) return;
 
     setSubmitting(true);
     setApiError('');
 
-    const exists = await checkPhone(form.phoneNumber);
-    if (exists === null) {
+    const [phoneExists, usernameExists, emailExists] = await Promise.all([
+      checkPhone(form.phoneNumber),
+      checkUsername(form.username),
+      checkEmail(form.email),
+    ]);
+
+    const dupErrs = {};
+    if (phoneExists) dupErrs.phoneNumber = 'Phone number already exists.';
+    if (usernameExists) dupErrs.username = 'Username already exists.';
+    if (emailExists) dupErrs.email = 'Email already exists.';
+
+    if (phoneExists === null || usernameExists === null || emailExists === null) {
       setApiError('Could not reach the server. Please try again.');
       setSubmitting(false);
       return;
     }
-    if (exists) {
-      setErrors(e => ({ ...e, phoneNumber: 'Phone number already exists.' }));
+    if (Object.keys(dupErrs).length > 0) {
+      setErrors(e => ({ ...e, ...dupErrs }));
       setSubmitting(false);
       return;
     }
@@ -275,6 +309,8 @@ export default function App() {
           errors={errors}
           set={set}
           onPhoneBlur={onPhoneBlur}
+          onUsernameBlur={onUsernameBlur}
+          onEmailBlur={onEmailBlur}
           submitResult={submitResult}
         />
 
