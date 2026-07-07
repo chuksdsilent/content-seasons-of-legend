@@ -5,7 +5,6 @@ import { useFlutterwave, closePaymentModal } from 'flutterwave-react-v3';
 import StepProfile from './components/StepProfile';
 import SuccessScreen from './components/SuccessScreen';
 import logo from './assets/logo.png';
-import termsPdf from './assets/agreement.pdf';
 import { Link } from 'react-router-dom';
 
 const FLW_PUBLIC_KEY = import.meta.env.VITE_FLW_PUBLIC_KEY;
@@ -328,7 +327,7 @@ export default function App() {
         <a href="mailto:Info@seasonoflegends.com" className="site-footer__email">
           Info@seasonoflegends.com
         </a>
-        <a href={termsPdf} target="_blank" rel="noopener noreferrer" className="site-footer__about">About Us</a>
+        <Link to="/about" className="site-footer__about">About Us</Link>
       </footer>
     </div>
   );
