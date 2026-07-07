@@ -98,7 +98,7 @@ export default function App() {
     try {
       const res = await fetch(`${API_BASE}/check-user?phone=${encodeURIComponent(phone)}`);
       const data = await res.json();
-      return data === true || data?.exists === true || data?.found === true;
+      return data?.exists ?? null;
     } catch {
       return null;
     }
@@ -186,11 +186,11 @@ export default function App() {
 
   const onPhoneBlur = async () => {
     if (!form.phoneNumber.trim()) return;
-    const ok = await checkPhone(form.phoneNumber);
-    if (ok === null) {
+    const exists = await checkPhone(form.phoneNumber);
+    if (exists === null) {
       setApiError('Could not reach the server. Please try again.');
-    } else if (!ok) {
-      setErrors(e => ({ ...e, phoneNumber: 'Phone number not found. Please check and try again.' }));
+    } else if (exists) {
+      setErrors(e => ({ ...e, phoneNumber: 'Phone number already exists.' }));
     }
   };
 
@@ -200,14 +200,15 @@ export default function App() {
     setSubmitting(true);
     setApiError('');
 
-    const phoneOk = await checkPhone(form.phoneNumber);
-    if (!phoneOk) {
+    const exists = await checkPhone(form.phoneNumber);
+    if (exists === null) {
+      setApiError('Could not reach the server. Please try again.');
       setSubmitting(false);
-      if (phoneOk === null) {
-        setApiError('Could not reach the server. Please try again.');
-      } else {
-        setErrors(e => ({ ...e, phoneNumber: 'Phone number not found. Please check and try again.' }));
-      }
+      return;
+    }
+    if (exists) {
+      setErrors(e => ({ ...e, phoneNumber: 'Phone number already exists.' }));
+      setSubmitting(false);
       return;
     }
 
