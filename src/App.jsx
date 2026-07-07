@@ -51,7 +51,7 @@ export default function App() {
   const flwConfig = {
     public_key: FLW_PUBLIC_KEY,
     tx_ref: `SOL-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
-    amount: 200,
+    amount: 2500,
     currency: 'NGN',
     payment_options: 'card,bank_transfer',
     customer: {
@@ -92,6 +92,16 @@ export default function App() {
 
     setErrors(errs);
     return Object.keys(errs).length === 0;
+  };
+
+  const checkPhone = async (phone) => {
+    try {
+      const res = await fetch(`${API_BASE}/check-user?phone=${encodeURIComponent(phone)}`);
+      const data = await res.json();
+      return data === true || data?.exists === true || data?.found === true;
+    } catch {
+      return null;
+    }
   };
 
   const initiatePayment = async (txRef) => {
@@ -174,12 +184,34 @@ export default function App() {
     }
   };
 
+  const onPhoneBlur = async () => {
+    if (!form.phoneNumber.trim()) return;
+    const ok = await checkPhone(form.phoneNumber);
+    if (ok === null) {
+      setApiError('Could not reach the server. Please try again.');
+    } else if (!ok) {
+      setErrors(e => ({ ...e, phoneNumber: 'Phone number not found. Please check and try again.' }));
+    }
+  };
+
   const handleSubmit = async () => {
     if (!validateProfile()) return;
 
-    const txRef = flwConfig.tx_ref;
     setSubmitting(true);
     setApiError('');
+
+    const phoneOk = await checkPhone(form.phoneNumber);
+    if (!phoneOk) {
+      setSubmitting(false);
+      if (phoneOk === null) {
+        setApiError('Could not reach the server. Please try again.');
+      } else {
+        setErrors(e => ({ ...e, phoneNumber: 'Phone number not found. Please check and try again.' }));
+      }
+      return;
+    }
+
+    const txRef = flwConfig.tx_ref;
 
     const initiated = await initiatePayment(txRef);
     if (!initiated) {
@@ -241,6 +273,7 @@ export default function App() {
           form={form}
           errors={errors}
           set={set}
+          onPhoneBlur={onPhoneBlur}
           submitResult={submitResult}
         />
 

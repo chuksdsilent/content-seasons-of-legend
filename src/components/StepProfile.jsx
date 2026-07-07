@@ -42,7 +42,7 @@ function ProfileResult({ submitResult }) {
   );
 }
 
-export default function StepProfile({ form, errors, set, submitResult }) {
+export default function StepProfile({ form, errors, set, onPhoneBlur, submitResult }) {
   return (
     <div className="form-card">
       {submitResult ? (
@@ -88,6 +88,7 @@ export default function StepProfile({ form, errors, set, submitResult }) {
               placeholder="+234 xxx xxx xxxx"
               value={form.phoneNumber}
               onChange={e => set('phoneNumber', e.target.value)}
+              onBlur={onPhoneBlur}
             />
           </Field>
           <Field label="Email" error={errors.email}>
